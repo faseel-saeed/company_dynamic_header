@@ -17,7 +17,9 @@ Allows you to set a custom logo for each journal type
         'views/account_journal_views.xml',
         'views/report_invoice.xml',
         'views/bill_preview_template.xml',
-        'views/sale_order_views.xml'
+        'views/sale_order_views.xml',
+        'views/stock_picking_views.xml',
+        'views/res_users.xml'
     ],
     'assets': {
         'point_of_sale.assets': [

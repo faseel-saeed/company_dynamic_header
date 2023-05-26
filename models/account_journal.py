@@ -20,3 +20,10 @@ class AccountJournal(models.Model):
     doc_logo = fields.Binary(string='logo', help="set a logo", attachment=False)
 
 
+    use_own_sequence = fields.Boolean(string='Use Own Sequence',
+                                      help="Uses a custom sequence in sales orders")
+    sequence_type = fields.Char(string='Sequence Type',
+                             help="Set this field to define the sequence type")
+
+
+

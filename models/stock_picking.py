@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
-from itertools import groupby
-from markupsafe import Markup
+import json
+import time
+from ast import literal_eval
+from datetime import date, timedelta
+from collections import defaultdict
 
-from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.fields import Command
+from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
-from odoo.tools.sql import create_index
-
-from odoo.addons.payment import utils as payment_utils
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+class PickingType(models.Model):
+    _inherit = "stock.picking"
+
 
     def get_default_journal_id(self):
         if self.env.user.sudo().default_journal_id:
@@ -28,7 +29,6 @@ class SaleOrder(models.Model):
         'account.journal',
         compute='_compute_suitable_journal_ids',
     )
-
 
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain')
 
@@ -42,13 +42,9 @@ class SaleOrder(models.Model):
 
     journal_id = fields.Many2one('account.journal',
                                  string="Template",
-                                 help="Select the template to ensure that the correct company accounts are reflected",
+                                 help="Select the journal to ensure that the correct company accounts are reflected",
                                  states={'draft': [('readonly', False)]},
                                  check_company=True,
                                  required=True,
                                  default=get_default_journal_id,
                                  domain="[('id', 'in', suitable_journal_ids)]")
-
-
-
-

@@ -16,6 +16,15 @@
                                 <field name="doc_header" attrs="{'invisible': [('is_custom_header', '=', False)]}"/>
                                 <field name="doc_footer" attrs="{'invisible': [('is_custom_header', '=', False)]}"/>
                           </group>
+
+                          <group string="Custom Sequence">
+                                <field name="use_own_sequence"/>
+                                <field name="sequence_type" attrs="{'invisible': [('use_own_sequence', '=', False)]}"/>
+
+
+                          </group>
+
+
                       </group>
                  </xpath>
             </field>
