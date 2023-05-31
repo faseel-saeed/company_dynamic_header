@@ -18,11 +18,14 @@ from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 class PickingType(models.Model):
     _inherit = "stock.picking"
 
-
     def get_default_journal_id(self):
-        if self.env.user.sudo().default_journal_id:
-            return self.env.user.sudo().default_journal_id
+
+        current_uid = self._context.get('uid')
+        user = self.env['res.users'].browse(current_uid)
+        if user.default_journal_id.id:
+            return user.default_journal_id.id
         else:
+            raise UserError(_("User does not have a default template selected."))
             return None
 
     suitable_journal_ids = fields.Many2many(
